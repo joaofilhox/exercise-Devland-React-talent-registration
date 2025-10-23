@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { CreateTalentDto } from '../../types/talent';
 import { talentService } from '../../services/talentService';
+import styles from './TalentForm.module.css';
 
 interface TalentFormProps {
     onSuccess?: () => void;
@@ -25,44 +26,54 @@ export default function TalentForm({ onSuccess }: TalentFormProps) {
     };
 
     return (
-        <div>
-            <h2>Cadastrar Talento</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>
-                        Nome:
-                        <input
-                            type="text"
-                            value={formData.name}
-                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                            required
-                        />
+        <div className={styles.container}>
+            <h2 className={styles.title}>Cadastrar Talento</h2>
+            <form className={styles.form} onSubmit={handleSubmit}>
+                <div className={styles.field}>
+                    <label className={styles.label} htmlFor="name">
+                        Nome
                     </label>
+                    <input
+                        id="name"
+                        type="text"
+                        className={styles.input}
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="Digite o nome da empresa"
+                        required
+                    />
                 </div>
-                <div>
-                    <label>
-                        CNPJ:
-                        <input
-                            type="text"
-                            value={formData.cnpj}
-                            onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
-                            required
-                        />
+                <div className={styles.field}>
+                    <label className={styles.label} htmlFor="cnpj">
+                        CNPJ
                     </label>
+                    <input
+                        id="cnpj"
+                        type="text"
+                        className={styles.input}
+                        value={formData.cnpj}
+                        onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
+                        placeholder="00.000.000/0000-00"
+                        required
+                    />
                 </div>
-                <div>
-                    <label>
-                        Status:
-                        <select
-                            value={formData.status}
-                            onChange={(e) => setFormData({ ...formData, status: e.target.value as 'ACTIVE' | 'INACTIVE' })}
-                        >
-                            <option value="ACTIVE">ACTIVE</option>
-                            <option value="INACTIVE">INACTIVE</option>
-                        </select>
+                <div className={styles.field}>
+                    <label className={styles.label} htmlFor="status">
+                        Status
                     </label>
+                    <select
+                        id="status"
+                        className={styles.select}
+                        value={formData.status}
+                        onChange={(e) => setFormData({ ...formData, status: e.target.value as 'ACTIVE' | 'INACTIVE' })}
+                    >
+                        <option value="ACTIVE">Ativo</option>
+                        <option value="INACTIVE">Inativo</option>
+                    </select>
                 </div>
-                <button type="submit">Cadastrar</button>
+                <button type="submit" className={styles.button}>
+                    Cadastrar Talento
+                </button>
             </form>
         </div>
     );
