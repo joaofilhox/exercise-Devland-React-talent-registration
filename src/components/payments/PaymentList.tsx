@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Payment } from '../../types/payment';
 import { paymentService } from '../../services/paymentService';
+import styles from './PaymentList.module.css';
 
 export default function PaymentList() {
     const [payments, setPayments] = useState<Payment[]>([]);
@@ -19,7 +20,7 @@ export default function PaymentList() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Excluir?')) return;
+        if (!confirm('Tem certeza que deseja excluir este pagamento?')) return;
         try {
             await paymentService.delete(id);
             loadPayments();
@@ -32,17 +33,27 @@ export default function PaymentList() {
         loadPayments();
     }, []);
 
-    if (loading) return <div>Carregando...</div>;
+    if (loading) {
+        return (
+            <div className={styles.container}>
+                <div className={styles.loading}>Carregando...</div>
+            </div>
+        );
+    }
 
     return (
-        <div>
-            <h2>Lista de Pagamentos</h2>
-            <button onClick={loadPayments}>Atualizar</button>
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <h2 className={styles.title}>Lista de Pagamentos</h2>
+                <button className={styles.refreshBtn} onClick={loadPayments}>
+                    🔄 Atualizar
+                </button>
+            </div>
 
             {payments.length === 0 ? (
-                <p>Nenhum pagamento cadastrado</p>
+                <p className={styles.empty}>Nenhum pagamento cadastrado</p>
             ) : (
-                <table border={1}>
+                <table className={styles.table}>
                     <thead>
                         <tr>
                             <th>Talento</th>
@@ -55,10 +66,19 @@ export default function PaymentList() {
                         {payments.map((payment) => (
                             <tr key={payment.id}>
                                 <td>{payment.talent?.name || 'N/A'}</td>
-                                <td>{payment.month}/{payment.year}</td>
-                                <td>R$ {payment.amount}</td>
+                                <td className={styles.date}>
+                                    {payment.month.toString().padStart(2, '0')}/{payment.year}
+                                </td>
+                                <td className={styles.amount}>
+                                    R$ {payment.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </td>
                                 <td>
-                                    <button onClick={() => handleDelete(payment.id)}>Excluir</button>
+                                    <button
+                                        className={styles.deleteBtn}
+                                        onClick={() => handleDelete(payment.id)}
+                                    >
+                                        🗑️ Excluir
+                                    </button>
                                 </td>
                             </tr>
                         ))}
